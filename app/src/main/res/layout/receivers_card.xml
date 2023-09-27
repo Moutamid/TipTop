@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    app:cardBackgroundColor="@color/grey"
+    app:cardCornerRadius="24dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="'@'username"
+            android:textColor="@color/text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawableStart="@drawable/round_business_24"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/dark"
+            android:gravity="center_vertical"
+            android:text="Fooliz Inc"
+            android:textColor="@color/dark"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/jobTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:drawableStart="@drawable/round_business_center_24"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/dark"
+            android:gravity="center_vertical"
+            android:text="Abdroid Developer"
+            android:textColor="@color/dark"
+            android:textSize="15sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="12dp"
+            android:text="Send Tip"
+            android:textSize="16sp"
+            app:cornerRadius="12dp" />
+
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

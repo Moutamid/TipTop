@@ -55,7 +55,9 @@ public class Constants {
     static Dialog dialog;
     public static final String DATEFORMATE = "dd/MM/yyyy";
     public static final String USER = "USER";
-    public static final String USERNAME = "USERNAME";
+    public static final String STASH_USER = "STASH_USER";
+    public static final String IS_VIP = "IS_VIP";
+    public static final String IS_MODE_CHANGE = "IS_MODE_CHANGE";
 
     public static String getFormatedDate(long date){
         return new SimpleDateFormat(DATEFORMATE, Locale.getDefault()).format(date);

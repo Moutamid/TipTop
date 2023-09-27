@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.moutamid.tiptop.R;
 import com.moutamid.tiptop.databinding.FragmentWalletBinding;
+import com.moutamid.tiptop.utilis.Constants;
 
 public class WalletFragment extends Fragment {
     FragmentWalletBinding binding;
@@ -26,4 +27,11 @@ public class WalletFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Constants.initDialog(requireContext());
+    }
+
 }

@@ -31,12 +31,13 @@ public class TipperDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityTipperDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Constants.checkApp(this);
 
         Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid())
                 .get().addOnSuccessListener(dataSnapshot -> {
                     if (dataSnapshot.exists()) {
                         UserModel model = dataSnapshot.getValue(UserModel.class);
-                        Stash.put(Constants.USERNAME, model.getName());
+                        Stash.put(Constants.STASH_USER, model);
                         binding.welcomeUser.setText("Welcome " + getUserFirstName());
                     }
                 }).addOnFailureListener(e -> {
@@ -58,7 +59,10 @@ public class TipperDashboardActivity extends AppCompatActivity {
             }
         }
 
-        binding.settings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+        binding.settings.setOnClickListener(v -> {
+            startActivity(new Intent(this, SettingsActivity.class));
+            finish();
+        });
 
     }
 
@@ -70,11 +74,14 @@ public class TipperDashboardActivity extends AppCompatActivity {
 
     private String getUserFirstName() {
 
-        String name = Stash.getString(Constants.USERNAME, "");
+        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        String name = "";
         String[] n;
-        if (name.contains(" ")){
-            n = name.split(" ");
-            name = n[0];
+        if (sn != null){
+            if (sn.getName().contains(" ")){
+                n = sn.getName().split(" ");
+                name = n[0];
+            }
         }
 
         return name + "!";

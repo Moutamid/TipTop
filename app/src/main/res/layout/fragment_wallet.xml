@@ -15,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -80,16 +80,46 @@
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
             android:background="@drawable/bottom"
-            android:padding="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:textSize="22sp"
+                android:text="Transactions History"
                 android:textColor="@color/black"
-                android:text="Linked Bank Account" />
+                android:textSize="22sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transactionRC"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:listitem="@layout/transaction_history_card" />
+
+            <LinearLayout
+                android:id="@+id/nothingFound"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
+                    android:src="@drawable/no_found" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Nothing Found"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

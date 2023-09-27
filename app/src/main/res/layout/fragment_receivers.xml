@@ -1,10 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="15dp"
     tools:context=".tiper_side.fragments.ReceiversFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Find a Recipient"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/grey"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        android:layout_marginTop="10dp"
+        app:startIconDrawable="@drawable/round_person_24"
+        android:hint="Search By Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchCompany"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/grey"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxStrokeWidth="0dp"
+        android:layout_marginTop="10dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:startIconDrawable="@drawable/round_business_24"
+        android:hint="Search By Company">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Search"
+        android:textSize="16sp"
+        app:cornerRadius="12dp"
+        android:padding="12dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/receiversRC"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:listitem="@layout/receivers_card" />
+
+    <LinearLayout
+        android:id="@+id/nothingFound"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:src="@drawable/no_found" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Nothing Found"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
 
-</FrameLayout>
+</LinearLayout>
