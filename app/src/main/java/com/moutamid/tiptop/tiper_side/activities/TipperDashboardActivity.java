@@ -38,7 +38,7 @@ public class TipperDashboardActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         UserModel model = dataSnapshot.getValue(UserModel.class);
                         Stash.put(Constants.STASH_USER, model);
-                        binding.welcomeUser.setText("Welcome " + getUserFirstName());
+                        binding.welcomeUser.setText("Welcome " + Constants.getUserFirstName());
                     }
                 }).addOnFailureListener(e -> {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -69,23 +69,9 @@ public class TipperDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        binding.welcomeUser.setText("Welcome " + getUserFirstName());
+        binding.welcomeUser.setText("Welcome " + Constants.getUserFirstName());
     }
 
-    private String getUserFirstName() {
-
-        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
-        String name = "";
-        String[] n;
-        if (sn != null){
-            if (sn.getName().contains(" ")){
-                n = sn.getName().split(" ");
-                name = n[0];
-            }
-        }
-
-        return name + "!";
-    }
 
     public class CustomPagerAdapter extends FragmentPagerAdapter {
         private final ArrayList<Fragment> fragmentList = new ArrayList<>();

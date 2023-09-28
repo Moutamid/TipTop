@@ -18,8 +18,13 @@ import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.receiver_side.activities.ReceiverDashboardActivity;
 import com.moutamid.tiptop.utilis.Constants;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;
+    UserModel userModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
         binding.toolbar.title.setText("Settings");
 
         binding.switchMode.setOnClickListener(v -> {
-            if (binding.switchMode.isChecked()){
-                if (!Stash.getBoolean(Constants.IS_VIP, false)) {
+            if (!binding.switchMode.isChecked()) {
+                if (!userModel.isSubscribed()) {
                     startActivity(new Intent(this, PaymentScreenActivity.class));
                 } else {
                     changeMode();
@@ -55,23 +60,35 @@ public class SettingsActivity extends AppCompatActivity {
                     .create().show();
         });
 
+        binding.editProfile.setOnClickListener(v -> {
+            startActivity(new Intent(this, EditProfileActivity.class));
+        });
+
     }
 
     private void changeMode() {
-
+        Constants.showDialog();
+        Map<String, Object> map = new HashMap<>();
+        map.put("tipper", false);
+        Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid())
+                .updateChildren(map)
+                .addOnSuccessListener(unused -> {
+                    userModel.setTipper(false);
+                    Stash.put(Constants.STASH_USER, userModel);
+                    Constants.dismissDialog();
+                    startActivity(new Intent(this, ReceiverDashboardActivity.class));
+                    finish();
+                }).addOnFailureListener(e -> {
+                    Constants.dismissDialog();
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        binding.switchMode.setChecked(Stash.getBoolean(Constants.IS_MODE_CHANGE, false));
-
-        if (Stash.getBoolean(Constants.IS_MODE_CHANGE, false)){
-            binding.switchMode.setText("Switch to Tipper Mode");
-        } else {
-            binding.switchMode.setText("Switch to Receiver Mode");
-        }
-
+        userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        binding.switchMode.setChecked(userModel.isTipper());
     }
 
     @Override

@@ -44,7 +44,7 @@ public class SignUpTiperActivity extends AppCompatActivity {
                             binding.password.getEditText().getText().toString(),
                             binding.company.getEditText().getText().toString(),
                             binding.jobTitle.getEditText().getText().toString(),
-                            "",
+                            0, "",
                             true, false
                     );
                     Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).setValue(userModel)

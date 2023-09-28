@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.fxn.stash.Stash;
 import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.receiver_side.activities.ReceiverDashboardActivity;
 import com.moutamid.tiptop.tiper_side.activities.TipperDashboardActivity;

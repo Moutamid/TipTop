@@ -1,23 +1,41 @@
 package com.moutamid.tiptop.models;
 
 public class UserModel {
-    String ID, name, username, email, password, company, jobTitle, bankAccount;
+    String ID, name, username, email, password, company, jobTitle, image;
+    double walletMoney;
     boolean isTipper, isSubscribed;
 
     public UserModel() {
     }
 
-    public UserModel(String ID, String name, String username, String email, String password, String company, String jobTitle, String bankAccount, boolean isTipper, boolean isSubscribed) {
+    public UserModel(String ID, String name, String username, String email, String password, String company, String jobTitle, double walletMoney, String image, boolean isTipper, boolean isSubscribed) {
         this.ID = ID;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.company = company;
+        this.walletMoney = walletMoney;
         this.jobTitle = jobTitle;
-        this.bankAccount = bankAccount;
+        this.image = image;
         this.isTipper = isTipper;
         this.isSubscribed = isSubscribed;
+    }
+
+    public double getWalletMoney() {
+        return walletMoney;
+    }
+
+    public void setWalletMoney(double walletMoney) {
+        this.walletMoney = walletMoney;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getID() {
@@ -76,13 +94,6 @@ public class UserModel {
         this.jobTitle = jobTitle;
     }
 
-    public String getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(String bankAccount) {
-        this.bankAccount = bankAccount;
-    }
 
     public boolean isTipper() {
         return isTipper;

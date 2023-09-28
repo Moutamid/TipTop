@@ -24,6 +24,7 @@
                 android:text="Available Balance" />
 
             <TextView
+                android:id="@+id/walletAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="12dp"
@@ -38,6 +39,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/pay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -48,6 +50,7 @@
                     app:icon="@drawable/round_arrow_upward_24" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/request"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -59,6 +62,7 @@
                     app:icon="@drawable/round_arrow_downward_24" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/withdraw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

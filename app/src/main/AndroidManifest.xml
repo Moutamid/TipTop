@@ -16,6 +16,13 @@
         android:theme="@style/Theme.TipTop"
         tools:targetApi="31">
         <activity
+            android:name=".receiver_side.activities.EditProfileReceiverActivity"
+            android:exported="false"
+            android:theme="@style/Base.Theme.TipTop.Receiver" />
+        <activity
+            android:name=".tiper_side.activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".receiver_side.activities.SettingsActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.TipTop.Receiver" />
@@ -67,6 +74,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="sqip.SQUARE_APPLICATION_ID"
+            android:value="@string/APPLICATION_ID" />
     </application>
 
 </manifest>

@@ -1,9 +1,13 @@
 package com.moutamid.tiptop.utilis;
 
+import com.fxn.stash.Stash;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.moutamid.tiptop.R;
+import com.moutamid.tiptop.models.UserModel;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -58,12 +63,13 @@ public class Constants {
     public static final String STASH_USER = "STASH_USER";
     public static final String IS_VIP = "IS_VIP";
     public static final String IS_MODE_CHANGE = "IS_MODE_CHANGE";
+    public static final String EURO_SYMBOL = "€";
 
-    public static String getFormatedDate(long date){
+    public static String getFormatedDate(long date) {
         return new SimpleDateFormat(DATEFORMATE, Locale.getDefault()).format(date);
     }
 
-    public static void initDialog(Context context){
+    public static void initDialog(Context context) {
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.loading_dialog);
@@ -71,11 +77,11 @@ public class Constants {
         dialog.setCancelable(false);
     }
 
-    public static void showDialog(){
+    public static void showDialog() {
         dialog.show();
     }
 
-    public static void dismissDialog(){
+    public static void dismissDialog() {
         dialog.dismiss();
     }
 
@@ -137,6 +143,7 @@ public class Constants {
 
         }).start();
     }
+
     public static FirebaseAuth auth() {
         return FirebaseAuth.getInstance();
     }
@@ -147,4 +154,29 @@ public class Constants {
         return db;
     }
 
+    public static StorageReference storageReference(String auth) {
+        StorageReference sr = FirebaseStorage.getInstance().getReference().child("tiptop").child(auth);
+        return sr;
+    }
+
+    public static String getUserFirstName() {
+
+        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        String name = "";
+        String[] n;
+        if (sn != null) {
+            if (sn.getName().contains(" ")) {
+                n = sn.getName().split(" ");
+                name = n[0];
+            }
+        }
+
+        return name + "!";
+    }
+
+
+    public static String decimalFormat(double walletMoney) {
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        return decimalFormat.format(walletMoney);
+    }
 }
