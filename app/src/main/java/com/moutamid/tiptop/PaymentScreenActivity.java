@@ -1,5 +1,7 @@
 package com.moutamid.tiptop;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,15 +16,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.PurchaseInfo;
+import com.fxn.stash.Stash;
 import com.moutamid.tiptop.databinding.ActivityPaymentScreenBinding;
 import com.moutamid.tiptop.utilis.ChargeService;
+import com.moutamid.tiptop.utilis.Constants;
 import com.moutamid.tiptop.utilis.OrderSheet;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class PaymentScreenActivity extends AppCompatActivity {
+
+public class PaymentScreenActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
     ActivityPaymentScreenBinding binding;
     private OrderSheet orderSheet;
     boolean isLifetime = true;
+    BillingProcessor bp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,9 @@ public class PaymentScreenActivity extends AppCompatActivity {
         binding.lifetime.setStrokeWidth(5);
 
         binding.back.setOnClickListener(v -> onBackPressed());
+
+        bp = BillingProcessor.newBillingProcessor(this, Constants.LICENSE_KEY, this);
+        bp.initialize();
 
 /*
         OkHttpClient squareOkHttpClient = new OkHttpClient.Builder()
@@ -59,8 +72,11 @@ public class PaymentScreenActivity extends AppCompatActivity {
 
     //        CardEntry.startCardEntryActivity(PaymentScreenActivity.this, true, 100);
 
-
+            String subscribe = isLifetime ? Constants.LIFETIME : Constants.MONTHLY;
+            bp.subscribe(PaymentScreenActivity.this, subscribe);
         });
+
+
 
         orderSheet = new OrderSheet();
         orderSheet.setOnPayWithCardClickListener(this::startCardEntryActivity);
@@ -153,4 +169,32 @@ public class PaymentScreenActivity extends AppCompatActivity {
         orderSheet.onRestoreInstanceState(this, savedInstanceState);
     }
 
+    @Override
+    public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
+        Map<String, Object> subscribe = new HashMap<>();
+        subscribe.put("subscribed", true);
+        subscribe.put("tipper", false);
+        Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).updateChildren(subscribe)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Subscribed to plan", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    Constants.dismissDialog();
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+
+    }
+
+    @Override
+    public void onBillingError(int errorCode, @Nullable Throwable error) {
+
+    }
+
+    @Override
+    public void onBillingInitialized() {
+
+    }
 }

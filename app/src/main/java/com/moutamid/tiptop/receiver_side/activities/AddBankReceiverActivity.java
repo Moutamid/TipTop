@@ -37,9 +37,10 @@ public class AddBankReceiverActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         userModel = dataSnapshot.getValue(UserModel.class);
                         Stash.put(Constants.STASH_USER, userModel);
-
-                        binding.name.getEditText().setText(userModel.getBankDetails().getName());
-                        binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
+                        if (userModel.getBankDetails() != null) {
+                            binding.name.getEditText().setText(userModel.getBankDetails().getName());
+                            binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
+                        }
                     }
                 }).addOnFailureListener(e -> {
                     Constants.dismissDialog();

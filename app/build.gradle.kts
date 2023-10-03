@@ -40,9 +40,24 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.dhaval2404:imagepicker:2.1")
 
+    val inAppPaymentsSdkVersion = "1.6.4"
+    implementation( "com.squareup.sdk.in-app-payments:card-entry:$inAppPaymentsSdkVersion")
+
 //    implementation("com.squareup.sdk:cardform:2.0.4")// Square Card Entry
 
-//    implementation("com.squareup:square:33.0.0.20230925")
+/*
+    implementation("com.squareup:square:33.0.0.20230925") {
+        exclude(group = "jakarta.activation")
+        exclude(group = "org.hamcrest.core")
+    }
+*/
+
+//    implementation("com.squareup:square-sdk:5.0.0")
+
+    val billing_version = "6.0.1"
+    implementation("com.android.billingclient:billing:$billing_version")
+    implementation("androidx.preference:preference:1.2.1")
+    implementation("com.anjlab.android.iab.v3:library:2.0.0")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
