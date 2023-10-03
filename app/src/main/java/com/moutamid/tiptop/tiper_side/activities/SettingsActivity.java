@@ -15,6 +15,7 @@ import com.moutamid.tiptop.R;
 import com.moutamid.tiptop.SplashScreenActivity;
 import com.moutamid.tiptop.databinding.ActivitySettingsBinding;
 import com.moutamid.tiptop.models.UserModel;
+import com.moutamid.tiptop.receiver_side.activities.AddBankReceiverActivity;
 import com.moutamid.tiptop.receiver_side.activities.ReceiverDashboardActivity;
 import com.moutamid.tiptop.utilis.Constants;
 
@@ -62,6 +63,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.editProfile.setOnClickListener(v -> {
             startActivity(new Intent(this, EditProfileActivity.class));
+        });
+        binding.bank.setOnClickListener(v -> {
+            startActivity(new Intent(this, AddBankTipperActivity.class));
         });
 
     }

@@ -40,19 +40,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.dhaval2404:imagepicker:2.1")
 
-    // Square API
-/*    implementation( "com.squareup.moshi:moshi-adapters:1.14.0")
-    implementation( "com.squareup.moshi:moshi:1.14.0")
-    implementation( "com.squareup.retrofit2:converter-moshi:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+//    implementation("com.squareup.sdk:cardform:2.0.4")// Square Card Entry
 
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")*/
-
-/*
-    val inAppPaymentsSdkVersion = "1.6.4"
-    implementation( "com.squareup.sdk.in-app-payments:card-entry:$inAppPaymentsSdkVersion")*/
 //    implementation("com.squareup:square:33.0.0.20230925")
 
     implementation("androidx.appcompat:appcompat:1.6.1")

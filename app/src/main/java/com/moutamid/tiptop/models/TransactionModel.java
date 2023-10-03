@@ -2,12 +2,13 @@ package com.moutamid.tiptop.models;
 
 public class TransactionModel {
     String ID, senderID, receiverID, price, senderName, receiverName, description;
+    String type; // Pay/Requested/Withdraw
     long timestamp;
 
     public TransactionModel() {
     }
 
-    public TransactionModel(String ID, String senderID, String receiverID, String price, String senderName, String receiverName, String description, long timestamp) {
+    public TransactionModel(String ID, String senderID, String receiverID, String price, String senderName, String receiverName, String description, String type, long timestamp) {
         this.ID = ID;
         this.senderID = senderID;
         this.receiverID = receiverID;
@@ -15,7 +16,16 @@ public class TransactionModel {
         this.senderName = senderName;
         this.receiverName = receiverName;
         this.description = description;
+        this.type = type;
         this.timestamp = timestamp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getID() {

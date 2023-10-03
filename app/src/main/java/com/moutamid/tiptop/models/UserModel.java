@@ -4,6 +4,7 @@ public class UserModel {
     String ID, name, username, email, password, company, jobTitle, image;
     double walletMoney;
     boolean isTipper, isSubscribed;
+    BankDetails bankDetails;
 
     public UserModel() {
     }
@@ -20,6 +21,21 @@ public class UserModel {
         this.image = image;
         this.isTipper = isTipper;
         this.isSubscribed = isSubscribed;
+    }
+
+    public UserModel(String ID, String name, String username, String email, String password, String company, String jobTitle, String image, double walletMoney, boolean isTipper, boolean isSubscribed, BankDetails bankDetails) {
+        this.ID = ID;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.company = company;
+        this.jobTitle = jobTitle;
+        this.image = image;
+        this.walletMoney = walletMoney;
+        this.isTipper = isTipper;
+        this.isSubscribed = isSubscribed;
+        this.bankDetails = bankDetails;
     }
 
     public double getWalletMoney() {
@@ -109,5 +125,13 @@ public class UserModel {
 
     public void setSubscribed(boolean subscribed) {
         isSubscribed = subscribed;
+    }
+
+    public BankDetails getBankDetails() {
+        return bankDetails;
+    }
+
+    public void setBankDetails(BankDetails bankDetails) {
+        this.bankDetails = bankDetails;
     }
 }

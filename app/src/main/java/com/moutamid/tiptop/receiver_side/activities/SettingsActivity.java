@@ -56,6 +56,9 @@ public class SettingsActivity extends AppCompatActivity {
         binding.editProfile.setOnClickListener(v -> {
             startActivity(new Intent(this, EditProfileReceiverActivity.class));
         });
+        binding.bank.setOnClickListener(v -> {
+            startActivity(new Intent(this, AddBankReceiverActivity.class));
+        });
 
     }
 
