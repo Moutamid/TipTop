@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,19 +47,28 @@ public class WalletFragment extends Fragment {
 
         TipperDashboardActivity activity = (TipperDashboardActivity) getActivity();
 
-        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
-        binding.walletAccount.setText(Constants.EURO_SYMBOL + Constants.decimalFormat(sn.getWalletMoney()));
+        UserModel sss = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+       if (sss != null){
+           binding.walletAccount.setText(Constants.EURO_SYMBOL + Constants.decimalFormat(sss.getWalletMoney()));
+       }
 
         list = new ArrayList<>();
 
         binding.pay.setOnClickListener(v -> {
-            if (sn.getWalletMoney() > 0){
-                if (activity != null) {
-                    ViewPager viewPager = activity.findViewById(R.id.viewPager);
-                    viewPager.setCurrentItem(1);
+            UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+            if (sn!=null){
+                if (sn.getBankDetails() != null) {
+                    if (sn.getWalletMoney() > 0){
+                        if (activity != null) {
+                            ViewPager viewPager = activity.findViewById(R.id.viewPager);
+                            viewPager.setCurrentItem(1);
+                        }
+                    } else {
+                        Toast.makeText(binding.getRoot().getContext(), "Insufficient Balance", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(binding.getRoot().getContext(), "Setup your bank details first", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(binding.getRoot().getContext(), "Insufficient Balance", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -116,6 +126,7 @@ public class WalletFragment extends Fragment {
                     if (dataSnapshot.exists()) {
                         UserModel model = dataSnapshot.getValue(UserModel.class);
                         Stash.put(Constants.STASH_USER, model);
+                        Log.d("OnResume" , "dataGet");
                         binding.walletAccount.setText(Constants.EURO_SYMBOL + Constants.decimalFormat(model.getWalletMoney()));
                     }
                 });

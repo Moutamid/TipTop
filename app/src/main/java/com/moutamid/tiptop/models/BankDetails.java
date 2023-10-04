@@ -2,15 +2,24 @@ package com.moutamid.tiptop.models;
 
 public class BankDetails {
 
-    String userID, name, email;
+    String userID, bankID, name, email;
 
     public BankDetails() {
     }
 
-    public BankDetails(String userID, String name, String email) {
+    public BankDetails(String userID, String bankID, String name, String email) {
         this.userID = userID;
+        this.bankID = bankID;
         this.name = name;
         this.email = email;
+    }
+
+    public String getBankID() {
+        return bankID;
+    }
+
+    public void setBankID(String bankID) {
+        this.bankID = bankID;
     }
 
     public String getUserID() {

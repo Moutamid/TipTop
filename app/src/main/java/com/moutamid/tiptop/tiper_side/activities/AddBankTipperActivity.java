@@ -50,7 +50,10 @@ public class AddBankTipperActivity extends AppCompatActivity {
         binding.save.setOnClickListener(v -> {
             if (valid()) {
                 Constants.showDialog();
-                userModel.setBankDetails(new BankDetails(Constants.auth().getCurrentUser().getUid(), binding.name.getEditText().getText().toString(), binding.email.getEditText().getText().toString()));
+                userModel.setBankDetails(new BankDetails(Constants.auth().getCurrentUser().getUid(),
+                        binding.account.getEditText().getText().toString(),
+                        binding.name.getEditText().getText().toString(),
+                        binding.email.getEditText().getText().toString()));
                 Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).setValue(userModel)
                         .addOnSuccessListener(unused -> {
                             Constants.dismissDialog();

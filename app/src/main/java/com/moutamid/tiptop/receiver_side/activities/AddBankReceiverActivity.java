@@ -38,6 +38,7 @@ public class AddBankReceiverActivity extends AppCompatActivity {
                         userModel = dataSnapshot.getValue(UserModel.class);
                         Stash.put(Constants.STASH_USER, userModel);
                         if (userModel.getBankDetails() != null) {
+                            binding.account.getEditText().setText(userModel.getBankDetails().getBankID());
                             binding.name.getEditText().setText(userModel.getBankDetails().getName());
                             binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
                         }
@@ -50,7 +51,10 @@ public class AddBankReceiverActivity extends AppCompatActivity {
         binding.save.setOnClickListener(v -> {
             if (valid()) {
                 Constants.showDialog();
-                userModel.setBankDetails(new BankDetails(Constants.auth().getCurrentUser().getUid(), binding.name.getEditText().getText().toString(), binding.email.getEditText().getText().toString()));
+                userModel.setBankDetails(new BankDetails(Constants.auth().getCurrentUser().getUid(),
+                        binding.account.getEditText().getText().toString(),
+                        binding.name.getEditText().getText().toString(),
+                        binding.email.getEditText().getText().toString()));
                 Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).setValue(userModel)
                         .addOnSuccessListener(unused -> {
                             Constants.dismissDialog();

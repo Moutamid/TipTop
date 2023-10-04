@@ -16,7 +16,7 @@
         android:layout_marginBottom="10dp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email"
+        android:id="@+id/walletAccount"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,8 +28,8 @@
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         android:layout_marginTop="10dp"
-        app:startIconDrawable="@drawable/round_email_24"
-        android:hint="Email">
+        app:startIconDrawable="@drawable/round_account_balance_24"
+        android:hint="Account ID">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -60,6 +60,21 @@
             android:inputType="numberDecimal" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:padding="12sp"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:background="@drawable/et_bg"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins"
+        android:hint="Note"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/request"

@@ -41,9 +41,9 @@ public class WithdrawMoneyFragment extends BottomSheetDialogFragment {
             if (valid()){
                 String ID = UUID.randomUUID().toString();
                 Constants.showDialog();
-                TransactionModel transactionModel = new TransactionModel (
-                        ID, Constants.auth().getCurrentUser().getUid(), Constants.auth().getCurrentUser().getUid(),
-                        binding.amount.getEditText().getText().toString(), userModel.getName(), userModel.getName(), binding.email.getEditText().getText().toString(),
+                TransactionModel transactionModel = new TransactionModel(
+                        ID, binding.walletAccount.getEditText().getText().toString(), binding.walletAccount.getEditText().getText().toString(),
+                        binding.amount.getEditText().getText().toString(), userModel.getName(), userModel.getName(), binding.message.getText().toString(),
                         Constants.REQ, new Date().getTime()
                 );
                 Constants.databaseReference().child(Constants.TRANSACTIONS).child(Constants.auth().getCurrentUser().getUid())
@@ -72,26 +72,22 @@ public class WithdrawMoneyFragment extends BottomSheetDialogFragment {
     }
 
     private boolean valid() {
-        if (binding.email.getEditText().getText().toString().isEmpty()){
-            binding.email.setErrorEnabled(true);
-            binding.email.setError("Email is empty");
+        if (binding.message.getText().toString().isEmpty()) {
+            binding.message.setError("Note is empty");
             return false;
         }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(binding.email.getEditText().getText().toString()).matches()){
-            binding.email.setErrorEnabled(true);
-            binding.email.setError("Email is not valid");
-            return false;
-        }
-
-        if (binding.amount.getEditText().getText().toString().isEmpty()){
+        if (binding.amount.getEditText().getText().toString().isEmpty()) {
             binding.amount.setErrorEnabled(true);
             binding.amount.setError("Amount is empty");
             return false;
         }
+        if (binding.walletAccount.getEditText().getText().toString().isEmpty()) {
+            binding.walletAccount.setErrorEnabled(true);
+            binding.walletAccount.setError("Account ID is empty");
+            return false;
+        }
         return true;
     }
-
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
