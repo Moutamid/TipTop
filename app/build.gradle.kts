@@ -17,6 +17,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        exclude("META-INF/LICENSE.md")
+        exclude("META-INF/NOTICE.md")
+    }
+
     buildFeatures { viewBinding = true }
 
     buildTypes {
@@ -40,6 +45,11 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.dhaval2404:imagepicker:2.1")
 
+    implementation("com.squareup:square:33.0.0.20230925") {
+        exclude(group =  "jakarta.activation")
+        exclude(group =  "jakarta.xml.bind")
+        exclude(group =  "org.hamcrest")
+    }
     implementation("com.android.volley:volley:1.2.1")
 
     val billing_version = "6.0.1"

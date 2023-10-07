@@ -34,20 +34,52 @@ import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.tiper_side.TipInterface;
 import com.moutamid.tiptop.tiper_side.adapter.UsersAdapter;
 import com.moutamid.tiptop.utilis.Constants;
+import com.squareup.square.Environment;
+import com.squareup.square.SquareClient;
+import com.squareup.square.api.CheckoutApi;
+import com.squareup.square.api.DefaultCheckoutApi;
+import com.squareup.square.api.DefaultPaymentsApi;
+import com.squareup.square.api.PaymentsApi;
+import com.squareup.square.api.TransactionsApi;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.CancelPaymentByIdempotencyKeyRequest;
+import com.squareup.square.models.CancelPaymentByIdempotencyKeyResponse;
+import com.squareup.square.models.CancelPaymentResponse;
+import com.squareup.square.models.CaptureTransactionResponse;
+import com.squareup.square.models.CashPaymentDetails;
+import com.squareup.square.models.CompletePaymentRequest;
+import com.squareup.square.models.CompletePaymentResponse;
+import com.squareup.square.models.CreatePaymentRequest;
+import com.squareup.square.models.CreatePaymentResponse;
+import com.squareup.square.models.GetPaymentResponse;
+import com.squareup.square.models.ListPaymentsResponse;
+import com.squareup.square.models.ListTransactionsResponse;
+import com.squareup.square.models.Money;
+import com.squareup.square.models.Payment;
+import com.squareup.square.models.RetrieveTransactionResponse;
+import com.squareup.square.models.Transaction;
+import com.squareup.square.models.UpdatePaymentRequest;
+import com.squareup.square.models.UpdatePaymentResponse;
+import com.squareup.square.models.VoidTransactionResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import io.apimatic.core.GlobalConfiguration;
 
 public class ReceiversFragment extends Fragment {
     FragmentReceiversBinding binding;
     UsersAdapter adapter;
     ArrayList<UserModel> list;
     RequestQueue requestQueue;
+    SquareClient client;
 
     public ReceiversFragment() {
         // Required empty public constructor
@@ -66,6 +98,11 @@ public class ReceiversFragment extends Fragment {
 
         list = new ArrayList<>();
 
+        client = new SquareClient.Builder()
+                .environment(Environment.SANDBOX)
+                .accessToken(Constants.ACCESS_TOKEN)
+                .build();
+
         binding.receiversRC.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.receiversRC.setHasFixedSize(false);
 
@@ -77,7 +114,6 @@ public class ReceiversFragment extends Fragment {
 
         return binding.getRoot();
     }
-
 
     private void searchUsers() {
         if (valid()) {
@@ -182,36 +218,66 @@ public class ReceiversFragment extends Fragment {
     }
 
     public void sendTIP(UserModel model, double amount, String note) {
-        try {
-            JSONObject mainObject = getJSON2(model, amount, note);
-            Log.d("response", "mainObject   " + mainObject.toString());
+        Money amountMoney = new Money.Builder()
+                .amount(1000L)
+                .currency("EUR")
+                .build();
 
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, Constants.SQUARE_TESTING_API_2, mainObject,
-                    response -> Log.d("response", "response   " + response.toString()),
-                    error -> {
-                        Log.d("response", "error   " + error.getMessage());
-                      //  requireActivity().runOnUiThread(() -> Toast.makeText(requireContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show());
-                    }
-            ) {
-                @Nullable
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Content-Type", "application/json");
-                    params.put("Authorization", "Bearer " + Constants.ACCESS_TOKEN);
-                    params.put("Square-Version", "2023-09-25");
-                    return params;
-                }
-            };
+        Money appFeeMoney = new Money.Builder()
+                .amount(10L)
+                .currency("EUR")
+                .build();
 
-            requestQueue.add(jsonObjectRequest);
+        Money tipMoney = new Money.Builder()
+                .amount(10L)
+                .currency("EUR")
+                .build();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+//        CreatePaymentRequest body = new CreatePaymentRequest.Builder("ccof:GaJGNaZa8x4OgDJn4GB", "7b0f3ec5-086a-4871-8f13-3c81b3875218")
+//                .amountMoney(amountMoney)
+//                .appFeeMoney(appFeeMoney)
+//                .autocomplete(true)
+//                .customerId("W92WH6P11H4Z77CTET0RNTGFW8")
+//                .locationId("L88917AVBK2S5")
+//                .referenceId("123456")
+//                .note("Brief description")
+//                .build();
 
+        PaymentsApi paymentsApi = client.getPaymentsApi();
+
+        CreatePaymentRequest body = new CreatePaymentRequest.Builder("cnon:card-nonce-ok", "31209d23-1dfb-4e11-80cf-45f42412473d")
+                .amountMoney(amountMoney)
+                .tipMoney(tipMoney)
+                .appFeeMoney(appFeeMoney)
+                .customerId("1234567890")
+                .build();
+
+        paymentsApi.createPaymentAsync(body)
+                .thenAccept(result -> {
+                    Log.d(TAG, "sendTIP: "+ result.toString());
+                    Log.d(TAG, "Success");
+                })
+                .exceptionally(exception -> {
+                    Log.d(TAG, "Failed to make the request");
+                    exception.printStackTrace();
+                    Log.d(TAG, "Exception: " + exception.getCause());
+                    return null;
+                });
+
+//        paymentsApi.createPaymentAsync(body)
+//                .thenAccept(result -> {
+//                    Log.d(TAG, "sendTIP: "+ result.toString());
+//                    Log.d(TAG, "Success");
+//                })
+//                .exceptionally(exception -> {
+//                    Log.d(TAG, "Failed to make the request");
+//                    exception.printStackTrace();
+//                    Log.d(TAG, "Exception: " + exception.getCause());
+//                    return null;
+//                });
     }
+
+    private static final String TAG = "ReceiversFragment";
 
     private JSONObject getJSON(UserModel model, double amount, String note) throws JSONException {
         JSONObject object = new JSONObject();
