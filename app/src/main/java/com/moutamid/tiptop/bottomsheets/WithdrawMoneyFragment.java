@@ -44,17 +44,17 @@ public class WithdrawMoneyFragment extends BottomSheetDialogFragment {
                 TransactionModel transactionModel = new TransactionModel(
                         ID, binding.walletAccount.getEditText().getText().toString(), binding.walletAccount.getEditText().getText().toString(),
                         binding.amount.getEditText().getText().toString(), userModel.getName(), userModel.getName(), binding.message.getText().toString(),
-                        Constants.REQ, new Date().getTime()
+                        Constants.WITHDRAW, new Date().getTime()
                 );
                 Constants.databaseReference().child(Constants.TRANSACTIONS).child(Constants.auth().getCurrentUser().getUid())
                         .child(ID).setValue(transactionModel).addOnSuccessListener(unused -> {
                             Map<String, Object> map = new HashMap<>();
-                            double money = userModel.getWalletMoney() + Double.parseDouble(binding.amount.getEditText().getText().toString());
+                            double money = userModel.getWalletMoney() - Double.parseDouble(binding.amount.getEditText().getText().toString());
                             map.put("walletMoney", money);
                             Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).updateChildren(map)
                                     .addOnSuccessListener(unused1 -> {
                                         Constants.dismissDialog();
-                                        Toast.makeText(binding.getRoot().getContext(), "Money Added", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(binding.getRoot().getContext(), "Withdraw Successfully", Toast.LENGTH_SHORT).show();
                                         this.dismiss();
                                     }).addOnFailureListener(e -> {
                                         Constants.dismissDialog();
@@ -84,6 +84,10 @@ public class WithdrawMoneyFragment extends BottomSheetDialogFragment {
         if (binding.walletAccount.getEditText().getText().toString().isEmpty()) {
             binding.walletAccount.setErrorEnabled(true);
             binding.walletAccount.setError("Account ID is empty");
+            return false;
+        }
+        if (userModel.getWalletMoney() < Double.parseDouble(binding.amount.getEditText().getText().toString())) {
+            Toast.makeText(requireContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

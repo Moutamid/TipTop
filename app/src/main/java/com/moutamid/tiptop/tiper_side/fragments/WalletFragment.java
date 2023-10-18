@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.moutamid.tiptop.R;
 import com.moutamid.tiptop.bottomsheets.RequestMoneyFragment;
+import com.moutamid.tiptop.bottomsheets.WithdrawMoneyFragment;
 import com.moutamid.tiptop.databinding.FragmentWalletBinding;
 import com.moutamid.tiptop.models.TransactionModel;
 import com.moutamid.tiptop.models.UserModel;
@@ -110,6 +111,11 @@ public class WalletFragment extends Fragment {
 
         binding.request.setOnClickListener(v -> {
             RequestMoneyFragment bottomSheetFragment = new RequestMoneyFragment();
+            bottomSheetFragment.setListener(() -> onResume());
+            bottomSheetFragment.show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
+        });
+        binding.withdraw.setOnClickListener(v -> {
+            WithdrawMoneyFragment bottomSheetFragment = new WithdrawMoneyFragment();
             bottomSheetFragment.setListener(() -> onResume());
             bottomSheetFragment.show(getActivity().getSupportFragmentManager(), bottomSheetFragment.getTag());
         });

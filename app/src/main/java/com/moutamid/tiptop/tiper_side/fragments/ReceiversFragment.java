@@ -30,6 +30,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.moutamid.tiptop.R;
 import com.moutamid.tiptop.databinding.FragmentReceiversBinding;
+import com.moutamid.tiptop.models.TransactionModel;
 import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.tiper_side.TipInterface;
 import com.moutamid.tiptop.tiper_side.adapter.UsersAdapter;
@@ -67,6 +68,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -207,7 +209,13 @@ public class ReceiversFragment extends Fragment {
             } else {
                 double money = Double.parseDouble(amount.getEditText().getText().toString());
                 String note = message.getText().toString();
-                sendTIP(model, money, note);
+                UserModel userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+                if (userModel.getWalletMoney() >= money) {
+                    dialog.dismiss();
+                    sendTip(model, money, note);
+                } else {
+                    Toast.makeText(requireContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -216,6 +224,57 @@ public class ReceiversFragment extends Fragment {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
     }
+
+    private void sendTip(UserModel model, double money, String note) {
+        UserModel userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        String ID = UUID.randomUUID().toString();
+        Constants.showDialog();
+
+        TransactionModel senderTransaction = new TransactionModel(
+                ID, userModel.getBankDetails().getEmail(), model.getBankDetails().getEmail(),
+                String.valueOf(money), userModel.getName(), model.getName(), note,
+                Constants.PAY, new Date().getTime()
+        );
+
+        Constants.databaseReference().child(Constants.TRANSACTIONS).child(Constants.auth().getCurrentUser().getUid())
+                .child(ID).setValue(senderTransaction).addOnSuccessListener(unused -> {
+                    Map<String, Object> map = new HashMap<>();
+                    double deduction = userModel.getWalletMoney() - money;
+                    map.put("walletMoney", deduction);
+                    Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).updateChildren(map)
+                            .addOnSuccessListener(unused1 -> {
+
+                                Constants.databaseReference().child(Constants.TRANSACTIONS).child(model.getID())
+                                        .child(ID).setValue(senderTransaction).addOnSuccessListener(unused12 -> {
+                                            Map<String, Object> map1 = new HashMap<>();
+                                            double tip = model.getWalletMoney() + money;
+                                            map1.put("walletMoney", tip);
+                                            Constants.databaseReference().child(Constants.USER).child(model.getID()).updateChildren(map1)
+                                                    .addOnSuccessListener(unused11 -> {
+                                                        Constants.dismissDialog();
+                                                        Toast.makeText(binding.getRoot().getContext(), "Transaction Sent Successfully", Toast.LENGTH_SHORT).show();
+                                                    }).addOnFailureListener(e -> {
+                                                        Constants.dismissDialog();
+                                                        Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    });
+
+                                        }).addOnFailureListener(e -> {
+                                            Constants.dismissDialog();
+                                            Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
+
+                            }).addOnFailureListener(e -> {
+                                Constants.dismissDialog();
+                                Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+
+                }).addOnFailureListener(e -> {
+                    Constants.dismissDialog();
+                    Toast.makeText(binding.getRoot().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+    }
+
 
     public void sendTIP(UserModel model, double amount, String note) {
         Money amountMoney = new Money.Builder()
@@ -254,7 +313,7 @@ public class ReceiversFragment extends Fragment {
 
         paymentsApi.createPaymentAsync(body)
                 .thenAccept(result -> {
-                    Log.d(TAG, "sendTIP: "+ result.toString());
+                    Log.d(TAG, "sendTIP: " + result.toString());
                     Log.d(TAG, "Success");
                 })
                 .exceptionally(exception -> {

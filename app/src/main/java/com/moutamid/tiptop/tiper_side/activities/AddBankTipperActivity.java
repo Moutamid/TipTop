@@ -38,6 +38,7 @@ public class AddBankTipperActivity extends AppCompatActivity {
                         Stash.put(Constants.STASH_USER, userModel);
 
                         if (userModel.getBankDetails() != null) {
+                            binding.account.getEditText().setText(userModel.getBankDetails().getBankID());
                             binding.name.getEditText().setText(userModel.getBankDetails().getName());
                             binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
                         }

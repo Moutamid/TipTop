@@ -59,9 +59,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.desc.setText(model.getSenderName());
 
         } else if (model.getType().equals(Constants.PAY)){
-            holder.icon.setImageResource(R.drawable.round_arrow_downward_24);
+            holder.icon.setImageResource(R.drawable.round_arrow_upward_24);
             holder.icon.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.red)));
-            holder.iconCard.setCardBackgroundColor(ColorStateList.valueOf(context.getResources().getColor(R.color.green_light)));
+            holder.iconCard.setCardBackgroundColor(ColorStateList.valueOf(context.getResources().getColor(R.color.red_light)));
 
             holder.name.setText(model.getReceiverName());
             holder.desc.setText(model.getDescription());
@@ -69,7 +69,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         } else if (model.getType().equals(Constants.WITHDRAW)){
             holder.icon.setImageResource(R.drawable.round_arrow_outward_24);
             holder.icon.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.green)));
-            holder.iconCard.setCardBackgroundColor(ColorStateList.valueOf(context.getResources().getColor(R.color.yellow_light)));
+            holder.iconCard.setCardBackgroundColor(ColorStateList.valueOf(context.getResources().getColor(R.color.green_light)));
 
             holder.name.setText("Withdraw Money");
             holder.desc.setText(model.getDescription());
