@@ -46,8 +46,6 @@ public class TransactionReceiverAdapter extends RecyclerView.Adapter<Transaction
         holder.day.setText(day);
         holder.month.setText(month);
 
-
-
         holder.price.setText(Constants.EURO_SYMBOL + model.getPrice());
 
         if (model.getType().equals(Constants.REQ)){
