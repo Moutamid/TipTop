@@ -36,7 +36,7 @@ public class RequestMoneyFragment extends BottomSheetDialogFragment {
 
         userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
 
-        binding.walletAccount.getEditText().setText(userModel.getBankDetails().getBankID());
+        binding.walletAccount.getEditText().setText(userModel.getBankDetails().getAccountNumber());
 
         Constants.initDialog(requireContext());
 

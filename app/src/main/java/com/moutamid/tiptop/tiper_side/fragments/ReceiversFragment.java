@@ -35,53 +35,20 @@ import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.tiper_side.TipInterface;
 import com.moutamid.tiptop.tiper_side.adapter.UsersAdapter;
 import com.moutamid.tiptop.utilis.Constants;
-import com.squareup.square.Environment;
-import com.squareup.square.SquareClient;
-import com.squareup.square.api.CheckoutApi;
-import com.squareup.square.api.DefaultCheckoutApi;
-import com.squareup.square.api.DefaultPaymentsApi;
-import com.squareup.square.api.PaymentsApi;
-import com.squareup.square.api.TransactionsApi;
-import com.squareup.square.exceptions.ApiException;
-import com.squareup.square.models.CancelPaymentByIdempotencyKeyRequest;
-import com.squareup.square.models.CancelPaymentByIdempotencyKeyResponse;
-import com.squareup.square.models.CancelPaymentResponse;
-import com.squareup.square.models.CaptureTransactionResponse;
-import com.squareup.square.models.CashPaymentDetails;
-import com.squareup.square.models.CompletePaymentRequest;
-import com.squareup.square.models.CompletePaymentResponse;
-import com.squareup.square.models.CreatePaymentRequest;
-import com.squareup.square.models.CreatePaymentResponse;
-import com.squareup.square.models.GetPaymentResponse;
-import com.squareup.square.models.ListPaymentsResponse;
-import com.squareup.square.models.ListTransactionsResponse;
-import com.squareup.square.models.Money;
-import com.squareup.square.models.Payment;
-import com.squareup.square.models.RetrieveTransactionResponse;
-import com.squareup.square.models.Transaction;
-import com.squareup.square.models.UpdatePaymentRequest;
-import com.squareup.square.models.UpdatePaymentResponse;
-import com.squareup.square.models.VoidTransactionResponse;
+import com.stripe.Stripe;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
-import io.apimatic.core.GlobalConfiguration;
 
 public class ReceiversFragment extends Fragment {
     FragmentReceiversBinding binding;
     UsersAdapter adapter;
     ArrayList<UserModel> list;
     RequestQueue requestQueue;
-    SquareClient client;
+//    SquareClient client;
 
     public ReceiversFragment() {
         // Required empty public constructor
@@ -99,11 +66,12 @@ public class ReceiversFragment extends Fragment {
         binding = FragmentReceiversBinding.inflate(getLayoutInflater(), container, false);
 
         list = new ArrayList<>();
+        Stripe.apiKey = "sk_test_26PHem9AhJZvU623DfE1x4sd";
 
-        client = new SquareClient.Builder()
-                .environment(Environment.SANDBOX)
-                .accessToken(Constants.ACCESS_TOKEN)
-                .build();
+//        client = new SquareClient.Builder()
+//                .environment(Environment.SANDBOX)
+//                .accessToken(Constants.ACCESS_TOKEN)
+//                .build();
 
         binding.receiversRC.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.receiversRC.setHasFixedSize(false);
@@ -197,7 +165,7 @@ public class ReceiversFragment extends Fragment {
         MaterialButton request = dialog.findViewById(R.id.request);
 
         request.setText("Send");
-        walletAccount.getEditText().setText(model.getBankDetails().getBankID());
+        walletAccount.getEditText().setText(model.getBankDetails().getAccountNumber());
 
         request.setOnClickListener(v -> {
             if (
@@ -275,7 +243,7 @@ public class ReceiversFragment extends Fragment {
 
     }
 
-
+/*
     public void sendTIP(UserModel model, double amount, String note) {
         Money amountMoney = new Money.Builder()
                 .amount(1000L)
@@ -376,6 +344,7 @@ public class ReceiversFragment extends Fragment {
         return object;
     }
 
+ */
     private boolean valid() {
         return !nameEmpty() || !companyEmpty();
     }

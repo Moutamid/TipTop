@@ -7,4 +7,5 @@
     <string name="refund_helper_text">You can refund this transaction through your Square dashboard, go to squareup.com/dashboard.</string>
     <string name="network_failure_title">Network Error</string>
     <string name="network_failure">There was an error processing the payment, please check your network connection.</string>
+    <string name="last_4_digit_of_us_social_security_number">Last 4 digit of US <b>Social Security Number</b></string>
 </resources>

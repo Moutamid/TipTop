@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.fxn.stash.Stash;
 import com.moutamid.tiptop.R;
 import com.moutamid.tiptop.databinding.ActivityAddBankTipperBinding;
+import com.moutamid.tiptop.models.Address;
 import com.moutamid.tiptop.models.BankDetails;
 import com.moutamid.tiptop.models.UserModel;
 import com.moutamid.tiptop.utilis.Constants;
@@ -38,9 +39,18 @@ public class AddBankTipperActivity extends AppCompatActivity {
                         Stash.put(Constants.STASH_USER, userModel);
 
                         if (userModel.getBankDetails() != null) {
-                            binding.account.getEditText().setText(userModel.getBankDetails().getBankID());
+                            binding.account.getEditText().setText(userModel.getBankDetails().getAccountNumber());
+                            binding.routing.getEditText().setText(userModel.getBankDetails().getRoutingNumber());
+                            binding.ssn.getEditText().setText(userModel.getBankDetails().getLast4SSN());
+                            binding.dob.getEditText().setText(userModel.getBankDetails().getDOB());
                             binding.name.getEditText().setText(userModel.getBankDetails().getName());
                             binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
+                            binding.phone.getEditText().setText(userModel.getBankDetails().getPhone());
+                            binding.country.getEditText().setText(userModel.getBankDetails().getAddress().getCountry());
+                            binding.city.getEditText().setText(userModel.getBankDetails().getAddress().getCity());
+                            binding.state.getEditText().setText(userModel.getBankDetails().getAddress().getState());
+                            binding.postalCode.getEditText().setText(userModel.getBankDetails().getAddress().getPostalCode());
+                            binding.address.getEditText().setText(userModel.getBankDetails().getAddress().getAddress());
                         }
                     }
                 }).addOnFailureListener(e -> {
@@ -52,9 +62,22 @@ public class AddBankTipperActivity extends AppCompatActivity {
             if (valid()) {
                 Constants.showDialog();
                 userModel.setBankDetails(new BankDetails(Constants.auth().getCurrentUser().getUid(),
-                        binding.account.getEditText().getText().toString(),
                         binding.name.getEditText().getText().toString(),
-                        binding.email.getEditText().getText().toString()));
+                        binding.email.getEditText().getText().toString(),
+                        binding.phone.getEditText().getText().toString(),
+                        binding.account.getEditText().getText().toString(),
+                        binding.routing.getEditText().getText().toString(),
+                        getLast4Digit(),
+                        binding.dob.getEditText().getText().toString(),
+                        binding.ssn.getEditText().getText().toString(),
+                        new Address(
+                                binding.country.getEditText().getText().toString(),
+                                binding.city.getEditText().getText().toString(),
+                                binding.address.getEditText().getText().toString(),
+                                binding.state.getEditText().getText().toString(),
+                                binding.postalCode.getEditText().getText().toString()
+                        )
+                        ));
                 Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).setValue(userModel)
                         .addOnSuccessListener(unused -> {
                             Constants.dismissDialog();
@@ -67,6 +90,11 @@ public class AddBankTipperActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String getLast4Digit() {
+        String str = binding.account.getEditText().getText().toString();
+        return str.substring(str.length() - 4);
     }
 
     private boolean valid() {
