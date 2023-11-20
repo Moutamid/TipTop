@@ -53,7 +53,7 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.stripe:stripe-java:20.77.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.stripe:stripe-android:17.2.0")
+    implementation("com.stripe:stripe-android:20.0.0")
 
     val billing_version = "6.0.1"
     implementation("com.android.billingclient:billing:$billing_version")

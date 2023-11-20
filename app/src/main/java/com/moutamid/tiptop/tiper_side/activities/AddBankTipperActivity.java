@@ -2,6 +2,8 @@ package com.moutamid.tiptop.tiper_side.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Toast;
@@ -13,7 +15,15 @@ import com.moutamid.tiptop.databinding.ActivityAddBankTipperBinding;
 import com.moutamid.tiptop.models.Address;
 import com.moutamid.tiptop.models.BankDetails;
 import com.moutamid.tiptop.models.UserModel;
+import com.moutamid.tiptop.receiver_side.activities.AddBankReceiverActivity;
+import com.moutamid.tiptop.stripe.ExchangeAuthorizationCodeForAccessToken;
 import com.moutamid.tiptop.utilis.Constants;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.AccountLink;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddBankTipperActivity extends AppCompatActivity {
     ActivityAddBankTipperBinding binding;
@@ -81,8 +91,28 @@ public class AddBankTipperActivity extends AppCompatActivity {
                 Constants.databaseReference().child(Constants.USER).child(Constants.auth().getCurrentUser().getUid()).setValue(userModel)
                         .addOnSuccessListener(unused -> {
                             Constants.dismissDialog();
-                            Toast.makeText(this, "Bank details Added", Toast.LENGTH_SHORT).show();
                             Stash.put(Constants.STASH_USER, userModel);
+
+                            Stripe.apiKey = Constants.API_KEY;
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("account", binding.account.getEditText().getText().toString());
+                            params.put("refresh_url", "https://google.com/");
+                            params.put(
+                                    "return_url",
+                                    "https://google.com/"
+                            );
+                            params.put("type", "account_onboarding");
+
+                            try {
+                                AccountLink accountLink = AccountLink.create(params);
+                                String url = accountLink.getUrl();
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                                browserIntent.setData(Uri.parse(url));
+                                startActivity(browserIntent);
+                            } catch (StripeException e) {
+                                e.printStackTrace();
+                            }
+
                         }).addOnFailureListener(e -> {
                             Constants.dismissDialog();
                             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -90,6 +120,19 @@ public class AddBankTipperActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getData() != null) {
+            Uri uri = intent.getData();
+            if (uri.getQueryParameter("code") != null) {
+                // Exchange the authorization code for an access token
+                String code = uri.getQueryParameter("code");
+                new ExchangeAuthorizationCodeForAccessToken(code).exchangeAuthorizationCode(AddBankTipperActivity.this);
+            }
+        }
     }
 
     private String getLast4Digit() {

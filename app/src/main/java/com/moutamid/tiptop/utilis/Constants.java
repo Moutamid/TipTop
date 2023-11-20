@@ -58,13 +58,8 @@ public class Constants {
     * */
 
     static Dialog dialog;
-
-    public static final String SQUARE_TESTING_API = "https://connect.squareupsandbox.com/v2/payments";
-    public static final String SQUARE_TESTING_API_2 = "https://connect.squareup.com/v2/sandbox/payments";
-    public static final String SQUARE_PRODUCTION_API = "https://connect.squareup.com/v2/payments";
-    public static final String Location_ID = "L4J3CPYZ3R7JD"; // SANDBOX
-//    public static final String ACCESS_TOKEN = "EAAAEObzsGjBA0BWM-rXAWzAMvJV8QYatQKVdstya32epXKiuBusV8_XXl3MrnrV"; // SANDBOX
-    public static final String ACCESS_TOKEN = "EAAAEE5JykSXD4qvxFbrtmlE1Ppw3Oi1R14bMn5lrQtox3rwIVAwj2wRjB0LdpSa"; // SANDBOX
+    public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String API_KEY = "sk_test_26PHem9AhJZvU623DfE1x4sd";
     public static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArBueEiTWfZk7O+BE104DZiZh6Dj8tIMJdZter0tO2KH0MUzn1UB14nrg6bb5IGup29NEvG6UI0ZelHgxClkYvLxzgXjagFgFKN46U6kijHxsccY9evn06NWNyJbPFoAkTQyVIPk44SBufx7g4H5f0azOtY28DL3fg5nvLDJ7yPAejGSvdZXuiVGopwS1A05QrjrgA6ol1YOUzxu22Vanb4ncIDTdF35MA2arbVf74fYFcqkJgWcfWkENRDxoj8IPo1tzWH2rO1/vaILmosJKd1SOrMhrmmyLita0AzJXH/d59Gwu3ed53Ct/Qcq9bDIX3TOALPdQ+NaRkapT2w0twQIDAQAB";
     public static final String DATEFORMATE = "dd/MM/yyyy";
     public static final String USER = "USER";

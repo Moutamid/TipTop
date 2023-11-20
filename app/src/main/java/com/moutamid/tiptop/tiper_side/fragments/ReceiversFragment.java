@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -17,12 +16,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.fxn.stash.Stash;
 import com.google.android.material.button.MaterialButton;
@@ -36,6 +30,8 @@ import com.moutamid.tiptop.tiper_side.TipInterface;
 import com.moutamid.tiptop.tiper_side.adapter.UsersAdapter;
 import com.moutamid.tiptop.utilis.Constants;
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Transfer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,7 +44,7 @@ public class ReceiversFragment extends Fragment {
     UsersAdapter adapter;
     ArrayList<UserModel> list;
     RequestQueue requestQueue;
-//    SquareClient client;
+    private static final String TAG = "ReceiversFragment";
 
     public ReceiversFragment() {
         // Required empty public constructor
@@ -66,7 +62,7 @@ public class ReceiversFragment extends Fragment {
         binding = FragmentReceiversBinding.inflate(getLayoutInflater(), container, false);
 
         list = new ArrayList<>();
-        Stripe.apiKey = "sk_test_26PHem9AhJZvU623DfE1x4sd";
+        Stripe.apiKey = Constants.API_KEY;
 
 //        client = new SquareClient.Builder()
 //                .environment(Environment.SANDBOX)
@@ -153,6 +149,29 @@ public class ReceiversFragment extends Fragment {
         }
     };
 
+    private void sendTransfer(UserModel model, long money, String note) {
+        Stripe.apiKey = Stash.getString(Constants.ACCESS_TOKEN);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", money);
+        params.put("currency", "usd");
+        params.put(
+                "destination",
+                model.getBankDetails().getAccountNumber()
+        );
+        params.put("transfer_group", "ORDER_95");
+
+        try {
+            Transfer transfer = Transfer.create(params);
+            Log.d(TAG, "sendTransfer: " + transfer.getRawJsonObject().toString());
+            sendTip(model, money, note);
+        } catch (StripeException e) {
+            e.printStackTrace();
+            Constants.dismissDialog();
+        }
+
+    }
+
     private void openDIalog(UserModel model) {
         Dialog dialog = new Dialog(requireContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -175,12 +194,14 @@ public class ReceiversFragment extends Fragment {
             ) {
                 Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_SHORT).show();
             } else {
-                double money = Double.parseDouble(amount.getEditText().getText().toString());
+                long money = Long.parseLong(amount.getEditText().getText().toString());
                 String note = message.getText().toString();
+
                 UserModel userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
                 if (userModel.getWalletMoney() >= money) {
                     dialog.dismiss();
-                    sendTip(model, money, note);
+                    Constants.showDialog();
+                    sendTransfer(model, money, note);
                 } else {
                     Toast.makeText(requireContext(), "Insufficient Balance", Toast.LENGTH_SHORT).show();
                 }
@@ -196,7 +217,6 @@ public class ReceiversFragment extends Fragment {
     private void sendTip(UserModel model, double money, String note) {
         UserModel userModel = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
         String ID = UUID.randomUUID().toString();
-        Constants.showDialog();
 
         TransactionModel senderTransaction = new TransactionModel(
                 ID, userModel.getBankDetails().getEmail(), model.getBankDetails().getEmail(),
@@ -243,108 +263,108 @@ public class ReceiversFragment extends Fragment {
 
     }
 
-/*
-    public void sendTIP(UserModel model, double amount, String note) {
-        Money amountMoney = new Money.Builder()
-                .amount(1000L)
-                .currency("EUR")
-                .build();
+    /*
+        public void sendTIP(UserModel model, double amount, String note) {
+            Money amountMoney = new Money.Builder()
+                    .amount(1000L)
+                    .currency("EUR")
+                    .build();
 
-        Money appFeeMoney = new Money.Builder()
-                .amount(10L)
-                .currency("EUR")
-                .build();
+            Money appFeeMoney = new Money.Builder()
+                    .amount(10L)
+                    .currency("EUR")
+                    .build();
 
-        Money tipMoney = new Money.Builder()
-                .amount(10L)
-                .currency("EUR")
-                .build();
+            Money tipMoney = new Money.Builder()
+                    .amount(10L)
+                    .currency("EUR")
+                    .build();
 
-//        CreatePaymentRequest body = new CreatePaymentRequest.Builder("ccof:GaJGNaZa8x4OgDJn4GB", "7b0f3ec5-086a-4871-8f13-3c81b3875218")
-//                .amountMoney(amountMoney)
-//                .appFeeMoney(appFeeMoney)
-//                .autocomplete(true)
-//                .customerId("W92WH6P11H4Z77CTET0RNTGFW8")
-//                .locationId("L88917AVBK2S5")
-//                .referenceId("123456")
-//                .note("Brief description")
-//                .build();
+    //        CreatePaymentRequest body = new CreatePaymentRequest.Builder("ccof:GaJGNaZa8x4OgDJn4GB", "7b0f3ec5-086a-4871-8f13-3c81b3875218")
+    //                .amountMoney(amountMoney)
+    //                .appFeeMoney(appFeeMoney)
+    //                .autocomplete(true)
+    //                .customerId("W92WH6P11H4Z77CTET0RNTGFW8")
+    //                .locationId("L88917AVBK2S5")
+    //                .referenceId("123456")
+    //                .note("Brief description")
+    //                .build();
 
-        PaymentsApi paymentsApi = client.getPaymentsApi();
+            PaymentsApi paymentsApi = client.getPaymentsApi();
 
-        CreatePaymentRequest body = new CreatePaymentRequest.Builder("cnon:card-nonce-ok", "31209d23-1dfb-4e11-80cf-45f42412473d")
-                .amountMoney(amountMoney)
-                .tipMoney(tipMoney)
-                .appFeeMoney(appFeeMoney)
-                .customerId("1234567890")
-                .build();
+            CreatePaymentRequest body = new CreatePaymentRequest.Builder("cnon:card-nonce-ok", "31209d23-1dfb-4e11-80cf-45f42412473d")
+                    .amountMoney(amountMoney)
+                    .tipMoney(tipMoney)
+                    .appFeeMoney(appFeeMoney)
+                    .customerId("1234567890")
+                    .build();
 
-        paymentsApi.createPaymentAsync(body)
-                .thenAccept(result -> {
-                    Log.d(TAG, "sendTIP: " + result.toString());
-                    Log.d(TAG, "Success");
-                })
-                .exceptionally(exception -> {
-                    Log.d(TAG, "Failed to make the request");
-                    exception.printStackTrace();
-                    Log.d(TAG, "Exception: " + exception.getCause());
-                    return null;
-                });
+            paymentsApi.createPaymentAsync(body)
+                    .thenAccept(result -> {
+                        Log.d(TAG, "sendTIP: " + result.toString());
+                        Log.d(TAG, "Success");
+                    })
+                    .exceptionally(exception -> {
+                        Log.d(TAG, "Failed to make the request");
+                        exception.printStackTrace();
+                        Log.d(TAG, "Exception: " + exception.getCause());
+                        return null;
+                    });
 
-//        paymentsApi.createPaymentAsync(body)
-//                .thenAccept(result -> {
-//                    Log.d(TAG, "sendTIP: "+ result.toString());
-//                    Log.d(TAG, "Success");
-//                })
-//                .exceptionally(exception -> {
-//                    Log.d(TAG, "Failed to make the request");
-//                    exception.printStackTrace();
-//                    Log.d(TAG, "Exception: " + exception.getCause());
-//                    return null;
-//                });
-    }
+    //        paymentsApi.createPaymentAsync(body)
+    //                .thenAccept(result -> {
+    //                    Log.d(TAG, "sendTIP: "+ result.toString());
+    //                    Log.d(TAG, "Success");
+    //                })
+    //                .exceptionally(exception -> {
+    //                    Log.d(TAG, "Failed to make the request");
+    //                    exception.printStackTrace();
+    //                    Log.d(TAG, "Exception: " + exception.getCause());
+    //                    return null;
+    //                });
+        }
 
-    private static final String TAG = "ReceiversFragment";
+        private static final String TAG = "ReceiversFragment";
 
-    private JSONObject getJSON(UserModel model, double amount, String note) throws JSONException {
-        JSONObject object = new JSONObject();
-        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        private JSONObject getJSON(UserModel model, double amount, String note) throws JSONException {
+            JSONObject object = new JSONObject();
+            UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
 
-        JSONObject amount_money = new JSONObject();
-        amount_money.put("amount", amount);
-        amount_money.put("currency", "USD");
+            JSONObject amount_money = new JSONObject();
+            amount_money.put("amount", amount);
+            amount_money.put("currency", "USD");
 
-        JSONObject app_fee_money = new JSONObject();
-        double value = (amount * 0.10);
-        double roundedValue = Math.round(value * 100) / 100;
-        app_fee_money.put("amount", roundedValue);
-        app_fee_money.put("currency", "USD");
+            JSONObject app_fee_money = new JSONObject();
+            double value = (amount * 0.10);
+            double roundedValue = Math.round(value * 100) / 100;
+            app_fee_money.put("amount", roundedValue);
+            app_fee_money.put("currency", "USD");
 
-        object.put("idempotency_key", UUID.randomUUID().toString());
-        object.put("amount_money", amount_money);
-        object.put("app_fee_money", app_fee_money);
-        object.put("location_id", Constants.Location_ID);
-        object.put("autocomplete", true);
-        object.put("source_id", "cnon:card-nonce-ok");
-        object.put("customer_id", model.getBankDetails().getBankID());
-        object.put("reference_id", UUID.randomUUID().toString());
-        object.put("note", note);
+            object.put("idempotency_key", UUID.randomUUID().toString());
+            object.put("amount_money", amount_money);
+            object.put("app_fee_money", app_fee_money);
+            object.put("location_id", Constants.Location_ID);
+            object.put("autocomplete", true);
+            object.put("source_id", "cnon:card-nonce-ok");
+            object.put("customer_id", model.getBankDetails().getBankID());
+            object.put("reference_id", UUID.randomUUID().toString());
+            object.put("note", note);
 
-        return object;
-    }
+            return object;
+        }
 
-    private JSONObject getJSON2(UserModel model, double amount, String note) throws JSONException {
-        JSONObject object = new JSONObject();
-        UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
+        private JSONObject getJSON2(UserModel model, double amount, String note) throws JSONException {
+            JSONObject object = new JSONObject();
+            UserModel sn = (UserModel) Stash.getObject(Constants.STASH_USER, UserModel.class);
 
-        object.put("sender_id", "1234567890");
-        object.put("recipient_id", "9876543210");
-        object.put("amount", amount);
+            object.put("sender_id", "1234567890");
+            object.put("recipient_id", "9876543210");
+            object.put("amount", amount);
 
-        return object;
-    }
+            return object;
+        }
 
- */
+     */
     private boolean valid() {
         return !nameEmpty() || !companyEmpty();
     }
