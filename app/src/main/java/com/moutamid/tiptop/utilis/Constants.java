@@ -59,7 +59,7 @@ public class Constants {
 
     static Dialog dialog;
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-    public static final String API_KEY = "sk_test_26PHem9AhJZvU623DfE1x4sd";
+    public static final String API_KEY = "sk_test_51LNagdLqGdNm40UgzDA5jYLB2CpXmr3Cq3tOKAWTdCWr6jXdyoeO2ULhUB9TKeJN5rbDsZaGipJmoFiTuV7ZWwZG00vw5GFYtL";
     public static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArBueEiTWfZk7O+BE104DZiZh6Dj8tIMJdZter0tO2KH0MUzn1UB14nrg6bb5IGup29NEvG6UI0ZelHgxClkYvLxzgXjagFgFKN46U6kijHxsccY9evn06NWNyJbPFoAkTQyVIPk44SBufx7g4H5f0azOtY28DL3fg5nvLDJ7yPAejGSvdZXuiVGopwS1A05QrjrgA6ol1YOUzxu22Vanb4ncIDTdF35MA2arbVf74fYFcqkJgWcfWkENRDxoj8IPo1tzWH2rO1/vaILmosJKd1SOrMhrmmyLita0AzJXH/d59Gwu3ed53Ct/Qcq9bDIX3TOALPdQ+NaRkapT2w0twQIDAQAB";
     public static final String DATEFORMATE = "dd/MM/yyyy";
     public static final String USER = "USER";

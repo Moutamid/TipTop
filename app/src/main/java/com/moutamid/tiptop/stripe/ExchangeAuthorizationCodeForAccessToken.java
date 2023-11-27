@@ -17,8 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ExchangeAuthorizationCodeForAccessToken {
+
+    // Test Account acct_1OEsy2Q5Jr5Uj6cU
+
+    // https://connect.stripe.com/d/setup/e/_P2yvxcfvsUJPcgO9pNILvxUr17/YWNjdF8xT0VzeTJRNUpyNVVqNmNV/f4f6f22db863b6db0
     private static String AUTHORIZATION_CODE = "YOUR_AUTHORIZATION_CODE";
-    private static final String CLIENT_ID = "YOUR_CLIENT_ID";
+    private static final String CLIENT_ID = "ca_M7FdK9OE1HrByywvZCoFLAA0pZqKyj4l";
     private static final String CLIENT_SECRET = Constants.API_KEY;
     private static final String REDIRECT_URI = "https://google.com";
     private static final String TOKEN_ENDPOINT = "https://api.example.com/oauth/token";

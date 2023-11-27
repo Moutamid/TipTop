@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -28,11 +30,19 @@ import java.util.Map;
 public class AddBankTipperActivity extends AppCompatActivity {
     ActivityAddBankTipperBinding binding;
     UserModel userModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddBankTipperBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         Constants.initDialog(this);
 
@@ -56,11 +66,13 @@ public class AddBankTipperActivity extends AppCompatActivity {
                             binding.name.getEditText().setText(userModel.getBankDetails().getName());
                             binding.email.getEditText().setText(userModel.getBankDetails().getEmail());
                             binding.phone.getEditText().setText(userModel.getBankDetails().getPhone());
-                            binding.country.getEditText().setText(userModel.getBankDetails().getAddress().getCountry());
-                            binding.city.getEditText().setText(userModel.getBankDetails().getAddress().getCity());
-                            binding.state.getEditText().setText(userModel.getBankDetails().getAddress().getState());
-                            binding.postalCode.getEditText().setText(userModel.getBankDetails().getAddress().getPostalCode());
-                            binding.address.getEditText().setText(userModel.getBankDetails().getAddress().getAddress());
+                            if (userModel.getBankDetails().getAddress() != null) {
+                                binding.country.getEditText().setText(userModel.getBankDetails().getAddress().getCountry());
+                                binding.city.getEditText().setText(userModel.getBankDetails().getAddress().getCity());
+                                binding.state.getEditText().setText(userModel.getBankDetails().getAddress().getState());
+                                binding.postalCode.getEditText().setText(userModel.getBankDetails().getAddress().getPostalCode());
+                                binding.address.getEditText().setText(userModel.getBankDetails().getAddress().getAddress());
+                            }
                         }
                     }
                 }).addOnFailureListener(e -> {
